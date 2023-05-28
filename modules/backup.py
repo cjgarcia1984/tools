@@ -3,7 +3,7 @@ import shutil
 import datetime
 
 
-class StockDataBackup:
+class DataBackup:
     def __init__(self, data_dir, backup_dir, retention_days):
         self.data_dir = data_dir
         self.backup_dir = backup_dir
