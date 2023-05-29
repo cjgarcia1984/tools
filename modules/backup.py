@@ -4,10 +4,11 @@ import datetime
 
 
 class DataBackup:
-    def __init__(self, data_dir, backup_dir, retention_days):
+    def __init__(self, data_dir, backup_dir, retention_days, max_backups=10):
         self.data_dir = data_dir
         self.backup_dir = backup_dir
         self.retention_days = retention_days
+        self.max_backups = max_backups
 
     def create_backup(self):
         # Create a backup directory with the current timestamp
@@ -23,7 +24,10 @@ class DataBackup:
                 os.makedirs(os.path.dirname(dst_path), exist_ok=True)
                 shutil.copy(src_path, dst_path)
 
-    def cleanup_backups(self):
+        # Check the total number of backups and remove the oldest ones if necessary
+        self.cleanup_excess_backups()
+
+    def cleanup_old_backups(self):
         # Get the cutoff date for backups
         cutoff_date = datetime.datetime.now() - datetime.timedelta(days=self.retention_days)
 
@@ -40,3 +44,14 @@ class DataBackup:
                 except ValueError:
                     # Skip directories with invalid names
                     continue
+
+    def cleanup_excess_backups(self):
+        # Get a list of all backup directories
+        backups = [entry for entry in os.scandir(self.backup_dir) if entry.is_dir()]
+
+        # Sort the backup directories by their timestamps (from oldest to newest)
+        backups.sort(key=lambda entry: entry.name)
+
+        # Remove the oldest backup directories until we're under the max limit
+        while len(backups) > self.max_backups:
+            shutil.rmtree(backups.pop(0).path)
