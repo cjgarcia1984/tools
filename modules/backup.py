@@ -20,7 +20,9 @@ class DataBackup:
         for root, dirs, files in os.walk(self.data_dir):
             for file in files:
                 src_path = os.path.join(root, file)
-                dst_path = os.path.join(backup_path, os.path.relpath(src_path, self.data_dir))
+                dst_path = os.path.join(
+                    backup_path, os.path.relpath(src_path, self.data_dir)
+                )
                 os.makedirs(os.path.dirname(dst_path), exist_ok=True)
                 shutil.copy(src_path, dst_path)
 
@@ -29,7 +31,9 @@ class DataBackup:
 
     def cleanup_old_backups(self):
         # Get the cutoff date for backups
-        cutoff_date = datetime.datetime.now() - datetime.timedelta(days=self.retention_days)
+        cutoff_date = datetime.datetime.now() - datetime.timedelta(
+            days=self.retention_days
+        )
 
         # Iterate over the backup directories
         for entry in os.scandir(self.backup_dir):
