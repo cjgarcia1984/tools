@@ -6,7 +6,7 @@ import datetime
 class DataBackup:
     def __init__(self, data_dir, backup_dir, retention_days, max_backups=10):
         self.data_dir = data_dir
-        self.backup_dir = backup_dir
+        self.backup_dir = os.path.join(backup_dir, os.path.basename(data_dir))  # Append data_dir to backup_dir
         self.retention_days = retention_days
         self.max_backups = max_backups
 
