@@ -9,6 +9,10 @@ def load_config(config_file):
     with open(config_file, "r") as file:
         return yaml.safe_load(file)
 
+def save_config(config_data, config_file):
+    with open(config_file, "w") as file:
+        yaml.safe_dump(config_data, file)
+
 
 def standardize_date(s, time="D"):
     s = pd.to_datetime(s.apply(parser.parse), utc=True)
