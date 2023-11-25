@@ -3,7 +3,7 @@ from dateutil import parser
 import yaml
 from datetime import datetime
 import os
-
+import pytz
 
 def load_config(config_file):
     with open(config_file, "r") as file:
@@ -21,7 +21,20 @@ def standardize_date(s, time="D"):
 
 
 def get_timestamp():
-    return datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
+    """
+    Get the current timestamp in Pacific Time (either PST or PDT depending on the date) 
+    in an Excel-friendly format.
+    
+    Returns:
+    - str: The timestamp formatted as "YYYY/MM/DD HH:MM:SS".
+    """
+    # Define the Pacific timezone
+    pacific = pytz.timezone('US/Pacific')
+    
+    # Get the current time in Pacific Time
+    current_time_pacific = datetime.now(pacific)
+    
+    return current_time_pacific.strftime("%Y/%m/%d %H:%M:%S")
 
 
 def is_same_dir(path, cwd=None):
